@@ -35,7 +35,7 @@ function displayShoe(obj){
         shoeImg.className = 'card-img-top'
         shoeImg.id = 'shoe-image'
 
-    //Created Container for Shoe Display (the "Body")//////////////
+    //Created Container for Shoe Display under the Image (the "Body")//////////////
     let cardBody = document.createElement('div')
         cardBody.className = 'card-body'
 
@@ -45,52 +45,69 @@ function displayShoe(obj){
         cardTitle.id = 'shoe-name'
         cardTitle.innerText = obj.name
 
-    //
+    //Added Shoe Description Under Shoe Image//////////////////////
     let desc = document.createElement('p')
         desc.className = 'card-text'
         desc.id = 'shoe-description'
         desc.innerText = obj.description
 
+    //Created a container for the price////////////////////////////
     let priceText = document.createElement('p')
         priceText.className = 'card-text'
 
+    //Added Price//////////////////////////////////////////////////
     let price = document.createElement('small')
         price.className = 'text-muted'
         price.id = 'shoe-price'
-        price.innerText = obj.price
+        price.innerText = `$${obj.price}`
 
+    //Placed price inside the price container//////////////////////
     priceText.append(price)
 
+    //Created Form for New Review//////////////////////////////////
     let form = document.createElement('form')
         form.id = 'new-review'
 
+        //Created container for form elements//////////////////////
         let formGroup = document.createElement('div')
+
+            //Created Text Area for review input/////////////
             let textArea = document.createElement('textarea')
                 textArea.className = 'form-control'
                 textArea.id = 'review-content'
                 textArea.rows = '3'
+
+            //Created Submit button for new review//////////
             let textInput = document.createElement('input')
                 textInput.type = 'submit'
                 textInput.className = 'btn btn-primary'
+            
+            //Added Elements to the container of form elements/////
             formGroup.append(textArea, textInput)
+
+            //Added container to form//////////////////////////////
             form.append(formGroup)
 
+        //Added Event Listener to Form/////////////////////////////
         form.addEventListener('submit', evt => {
             evt.preventDefault()
             submitReview(obj, evt)
         })
 
-
+    //Placed Everything I just created into "the Body"/////////////
     cardBody.append(cardTitle, desc, priceText, form)
 
+    //Created a container for reviews//////////////////////////////
     let cardHeader = document.createElement('h5')
         cardHeader.className = 'card-header'
         cardHeader.innerText = 'Reviews'
 
+    //Created an unordered list for reviews////////////////////////
     let reviewList = document.createElement('ul')
         reviewList.className = 'list-group list-group-flush'
         reviewList.id = 'reviews-list'
         
+        //Created a list element for each review for the shoe//////
         obj.reviews.forEach(review => {
             let reviewItem = document.createElement('li')
             reviewItem.className = 'list-group-item'
@@ -98,12 +115,17 @@ function displayShoe(obj){
             reviewList.prepend(reviewItem)
         })
 
+    //Added everything into the review container///////////////////
     shoeDisplay.append(shoeImg, cardBody, cardHeader, reviewList)
 }
 
 //Function for submitting a new review (POST fetch request)/////////////////////////////////
 function submitReview(obj, evt){
+
+    //Assigning input to a variable/////////////////////////
     let input = evt.target["review-content"].value
+
+    //POST fetch to submit review///////////////////////////
     fetch(`http://localhost:3000/shoes/${obj.id}/reviews`, {
         method: 'POST',
         headers: {
@@ -116,7 +138,12 @@ function submitReview(obj, evt){
     })
     .then(resp => resp.json())
     .then(respJSON => {
+
+        //Selected the Review List///////////////////////////
         let reviewList = document.querySelector('#reviews-list')
+
+        //Created New Review List Element////////////////////
+        //Prepended it to original list//////////////////////
         let reviewItem = document.createElement('li')
             reviewItem.className = 'list-group-item'
             reviewItem.innerText = respJSON.content
