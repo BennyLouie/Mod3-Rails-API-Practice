@@ -125,6 +125,9 @@ function submitReview(obj, evt){
     //Assigning input to a variable/////////////////////////
     let input = evt.target["review-content"].value
 
+    //Added conditional in case the input is blank//////////
+    if (input === ''){return}
+    
     //POST fetch to submit review///////////////////////////
     fetch(`http://localhost:3000/shoes/${obj.id}/reviews`, {
         method: 'POST',
